@@ -1,20 +1,17 @@
 from django.contrib import admin
-from .models import *
+from .models import PaddyAreaDetail, PaddyAreaInfo, PaddyAreaRiskDisease
 
 # Register your models here.
 
-class PaddyAreaDiseaseInline(admin.TabularInline):
-    model = PaddyAreaDisease
+class PaddyAreaRiskDiseaseInline(admin.TabularInline):
+    model = PaddyAreaRiskDisease
 
-class PaddyAreaRiskInline(admin.TabularInline):
-    model = PaddyAreaRisk
 
 class PaddyAreaInfoAdmin(admin.ModelAdmin):
-    inlines = [PaddyAreaDiseaseInline, PaddyAreaRiskInline, ]
+    inlines = [PaddyAreaRiskDiseaseInline, ]
 
-
-admin.site.register(PaddyAreaInfo, PaddyAreaInfoAdmin)
 admin.site.register(PaddyAreaDetail)
+admin.site.register(PaddyAreaInfo, PaddyAreaInfoAdmin)
 
 # admin.site.register(PaddyAreaInfo)
 # admin.site.register(PaddyAreaDetail)

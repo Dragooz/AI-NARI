@@ -24,20 +24,21 @@
         
         <p>paddy_images: <img src='{{i.paddy_images.url}}' style="width:100px;height:100px;" /> </p>
 
-        {% if i.id in disease_ids %}
-            <p>Disease - Confidence:</p>
+        {% if i.id in rd_ids %}
+            <p> Risk/Disease - Confidence:</p>
+            
             <ul>
-            {% for d in disease %}
+            {% for d in risk_disease %}
                 {% if d.get_id == i.id %}
                 
                     <li>
-                        <p>{{d.get_disease_name}} - {{d.get_confidence}}</p>
+                        <p>{{d.get_disease_name}} - {{d.get_confidence}} - Occur?{{d.happened}}</p>
                     </li>
                     
                     <p> Solutions: </p>
                     <ul>
-                    {% for s in solution%}
-                        {% if s.disease.name == d.get_disease_name %}
+                    {% for s in rd_solution %}
+                        {% if s.risk_disease.name == d.get_disease_name and s.happened == d.happened %}
                             <li>{{s.get_solution}}</li>
                         {% endif%}
                     {% endfor %}
@@ -47,19 +48,6 @@
             </ul>
         {% else %}
             <p>No Disease Detected</p>
-        {% endif %}
-
-        {% if i.id in risk_ids %}
-            <p>Risks:</p>
-            <ul>
-            {% for r in risk %}
-                {% if r.get_id == i.id %}
-                    <li>{{r.get_risk}}</li>
-                {% endif %}
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No Risk Detected</p>
         {% endif %}
         
         <p>--------------------------------------------</p>

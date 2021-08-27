@@ -1,5 +1,5 @@
 from django.db import models
-from information.models import Disease, Risk
+from information.models import RiskDisease
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -30,34 +30,23 @@ class PaddyAreaInfo(models.Model): #child
     paddy_images = models.ImageField(default='default.png', blank=True)
 
     #many-to-many
-    disease = models.ManyToManyField(Disease, through='PaddyAreaDisease')
-    risk = models.ManyToManyField(Risk, through='PaddyAreaRisk')
+    risk_disease = models.ManyToManyField(RiskDisease, through='PaddyAreaRiskDisease')
 
     def __str__(self):
         return self.paddy_area.paddy_area_name
 
 #bridges
-class PaddyAreaDisease(models.Model): #PAI_D_Intermediate
-    disease = models.ForeignKey(Disease, on_delete=models.CASCADE)
+class PaddyAreaRiskDisease(models.Model): #PAI_D_Intermediate
+    risk_disease = models.ForeignKey(RiskDisease, on_delete=models.CASCADE)
     paddy_area_info = models.ForeignKey(PaddyAreaInfo, on_delete=models.CASCADE)
-    d_confidence = models.FloatField()
+    confidence = models.FloatField()
+    happened = models.BooleanField()
 
     def get_id(self):
         return self.paddy_area_info.id
 
     def get_disease_name(self):
-        return self.disease.name
+        return self.risk_disease.name
 
     def get_confidence(self):
-        return self.d_confidence
-
-class PaddyAreaRisk(models.Model): #PAI_R_Intermediate
-    risk = models.ForeignKey(Risk, on_delete=models.CASCADE)
-    paddy_area_info = models.ForeignKey(PaddyAreaInfo, on_delete=models.CASCADE)
-    r_confidence = models.FloatField()
-
-    def get_risk(self):
-        return self.risk.name
-
-    def get_id(self):
-        return self.paddy_area_info.id
+        return self.confidence
