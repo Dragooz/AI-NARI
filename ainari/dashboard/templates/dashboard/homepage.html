@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,5 +10,60 @@
 </head>
 <body>
     <h1> Welcome to AINari Dashboard!</h1>
+
+    {% for i in info %}
+        <p>ID: {{i.id}}</p>
+        <p>Date: {{i.date_time}}</p>
+        <p>Paddy Area: {{i.paddy_area}}</p>
+        <p>paddy_height: {{i.paddy_height}}</p>
+        <p>humidity: {{i.humidity}}</p>
+        <p>temperature: {{i.temperature}}</p>
+        <p>water_level: {{i.water_level}}</p>
+        <p>soil nitrogen: {{i.soil_nitrogen}}</p>
+        <p>{{i.paddy_area.get_coordinates}}</p>
+        
+        <p>paddy_images: <img src='{{i.paddy_images.url}}' style="width:100px;height:100px;" /> </p>
+
+        {% if i.id in disease_ids %}
+            <p>Disease - Confidence:</p>
+            <ul>
+            {% for d in disease %}
+                {% if d.get_id == i.id %}
+                
+                    <li>
+                        <p>{{d.get_disease_name}} - {{d.get_confidence}}</p>
+                    </li>
+                    
+                    <p> Solutions: </p>
+                    <ul>
+                    {% for s in solution%}
+                        {% if s.disease.name == d.get_disease_name %}
+                            <li>{{s.get_solution}}</li>
+                        {% endif%}
+                    {% endfor %}
+                    </ul>
+                {% endif%}
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No Disease Detected</p>
+        {% endif %}
+
+        {% if i.id in risk_ids %}
+            <p>Risks:</p>
+            <ul>
+            {% for r in risk %}
+                {% if r.get_id == i.id %}
+                    <li>{{r.get_risk}}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No Risk Detected</p>
+        {% endif %}
+        
+        <p>--------------------------------------------</p>
+    {% endfor %}
+
 </body>
 </html>

@@ -13,6 +13,12 @@ class PaddyAreaDetail(models.Model):
     def __str__(self):
         return self.paddy_area_name
 
+    def get_coordinates(self):
+        return 'LONG: ' + str(self.longitude) + ', LAT: ' + str(self.latitude)
+
+    def get_state(self):
+        return self.state
+
 class PaddyAreaInfo(models.Model): #child
     date_time = models.DateTimeField(auto_now_add=True)
     paddy_area = models.ForeignKey(PaddyAreaDetail, on_delete=models.CASCADE, default=None)
@@ -20,6 +26,7 @@ class PaddyAreaInfo(models.Model): #child
     humidity = models.FloatField()
     temperature = models.FloatField()
     water_level = models.FloatField()
+    soil_nitrogen = models.FloatField(default= 0)
     paddy_images = models.ImageField(default='default.png', blank=True)
 
     #many-to-many
@@ -35,7 +42,22 @@ class PaddyAreaDisease(models.Model): #PAI_D_Intermediate
     paddy_area_info = models.ForeignKey(PaddyAreaInfo, on_delete=models.CASCADE)
     d_confidence = models.FloatField()
 
+    def get_id(self):
+        return self.paddy_area_info.id
+
+    def get_disease_name(self):
+        return self.disease.name
+
+    def get_confidence(self):
+        return self.d_confidence
+
 class PaddyAreaRisk(models.Model): #PAI_R_Intermediate
     risk = models.ForeignKey(Risk, on_delete=models.CASCADE)
     paddy_area_info = models.ForeignKey(PaddyAreaInfo, on_delete=models.CASCADE)
     r_confidence = models.FloatField()
+
+    def get_risk(self):
+        return self.risk.name
+
+    def get_id(self):
+        return self.paddy_area_info.id
