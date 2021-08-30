@@ -5,16 +5,13 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class PaddyAreaDetail(models.Model):
-    paddy_area_name = models.CharField(max_length=5)
+    name = models.CharField(max_length=5)
     state = models.CharField(max_length=20)
     longitude = models.FloatField()
     latitude = models.FloatField()
 
     def __str__(self):
-        return self.paddy_area_name
-
-    def get_coordinates(self):
-        return 'LONG: ' + str(self.longitude) + ', LAT: ' + str(self.latitude)
+        return self.name
 
     def get_state(self):
         return self.state
@@ -33,7 +30,7 @@ class PaddyAreaInfo(models.Model): #child
     risk_disease = models.ManyToManyField(RiskDisease, through='PaddyAreaRiskDisease')
 
     def __str__(self):
-        return self.paddy_area.paddy_area_name
+        return self.paddy_area.name
 
 #bridges
 class PaddyAreaRiskDisease(models.Model): #PAI_D_Intermediate
@@ -41,8 +38,9 @@ class PaddyAreaRiskDisease(models.Model): #PAI_D_Intermediate
     paddy_area_info = models.ForeignKey(PaddyAreaInfo, on_delete=models.CASCADE)
     confidence = models.FloatField()
     happened = models.BooleanField()
+    action_taken = models.BooleanField(default=False)
 
-    def get_id(self):
+    def get_info_id(self):
         return self.paddy_area_info.id
 
     def get_disease_name(self):

@@ -18,5 +18,7 @@ from . import views
 
 urlpatterns = [
     path('', views.homepage),
+    path('paddy_area_detail/<str:paddy_area_name>/', views.paddy_area_detail, name='paddy_area_detail'),
+    path('ajax/take_action/', views.take_action, name='take_action'),
     path('test/', views.test, name='test')
 ]

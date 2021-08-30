@@ -1,57 +1,112 @@
-{% load static %}
+{% extends 'base_layout.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
-</head>
-<body>
-    <h1> Welcome to AINari Dashboard!</h1>
+{% block content%}
 
+
+
+<h1> Welcome to AINari Dashboard!</h1>
+
+<table id="info_table" class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>DateTime</th>
+            <th>Paddy Area</th>
+            <th>Lat/Lon</th>
+            <th>Image</th>
+            <th>Paddy Condition</th>
+            <th>Paddy Issue </th>
+            <th>Action Taken?</th>
+        </tr>
+    </thead>
+
+    <tbody>
     {% for i in info %}
-        <p>ID: {{i.id}}</p>
-        <p>Date: {{i.date_time}}</p>
-        <p>Paddy Area: {{i.paddy_area}}</p>
-        <p>paddy_height: {{i.paddy_height}}</p>
-        <p>humidity: {{i.humidity}}</p>
-        <p>temperature: {{i.temperature}}</p>
-        <p>water_level: {{i.water_level}}</p>
-        <p>soil nitrogen: {{i.soil_nitrogen}}</p>
-        <p>{{i.paddy_area.get_coordinates}}</p>
-        
-        <p>paddy_images: <img src='{{i.paddy_images.url}}' style="width:100px;height:100px;" /> </p>
-
-        {% if i.id in rd_ids %}
-            <p> Risk/Disease - Confidence:</p>
-            
-            <ul>
-            {% for d in risk_disease %}
-                {% if d.get_id == i.id %}
-                
-                    <li>
-                        <p>{{d.get_disease_name}} - {{d.get_confidence}} - Occur?{{d.happened}}</p>
-                    </li>
-                    
-                    <p> Solutions: </p>
-                    <ul>
-                    {% for s in rd_solution %}
-                        {% if s.risk_disease.name == d.get_disease_name and s.happened == d.happened %}
-                            <li>{{s.get_solution}}</li>
+        <tr>
+            <td>{{i.id}}</td>
+            <td>{{i.date_time}}</td>
+            <td><a href='{% url "paddy_area_detail" i.paddy_area %}'>{{i.paddy_area}}</a></td>
+            <td>{{i.paddy_area.latitude}}/{{i.paddy_area.longitude}}</td>
+            <td><img src='{{i.paddy_images.url}}' style="width:100px;height:100px;" /> </td>
+            {{healthy_ids}}
+            {% if i.id in warning_ids %}
+            <td style='color:red;'>Warning</td>
+            {% elif i.id in potential_ids %}
+            <td style='color:yellow;'>Risky</td>
+            {% else %}
+            <td style='color:green;'>Healthy</td>
+            {% endif %}
+            <td>
+                <ul>
+                    {% for d in risk_disease %}
+                        {% if d.get_info_id == i.id %}
+                        
+                            <li>
+                                <p>{{d.get_disease_name}} - {{d.get_confidence}} - {{d.happened}}  </p>
+                            </li>
                         {% endif%}
                     {% endfor %}
-                    </ul>
-                {% endif%}
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No Disease Detected</p>
-        {% endif %}
-        
-        <p>--------------------------------------------</p>
-    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                {% for d in risk_disease %}
+                    {% if d.get_info_id == i.id %}
+                        <li>
+                            <p>{{d.action_taken}}</p>
+                        </li>
+                    {% endif%}
+                {% endfor %}
+            </td>
 
-</body>
-</html>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+
+{% for i in info %}
+    <p>ID: {{i.id}}</p>
+    <p>Date: {{i.date_time}}</p>
+    <p>Paddy Area: {{i.paddy_area}}</p>
+    <p>paddy_height: {{i.paddy_height}}</p>
+    <p>humidity: {{i.humidity}}</p>
+    <p>temperature: {{i.temperature}}</p>
+    <p>water_level: {{i.water_level}}</p>
+    <p>soil nitrogen: {{i.soil_nitrogen}}</p>
+    <p>{{i.paddy_area.get_coordinates}}</p>
+    
+    <p>paddy_images: <img src='{{i.paddy_images.url}}' style="width:100px;height:100px;" /> </p>
+
+    {% if i.id in potential_ids or i.id in warning_ids %}
+        <p> Risk/Disease - Confidence:</p>
+        
+        <ul>
+        {% for d in risk_disease %}
+            {% if d.get_id == i.id %}
+            
+                <li>
+                    <p>{{d.get_disease_name}} - {{d.get_confidence}} - Occur?{{d.happened}}</p>
+                </li>
+                
+                <p> Solutions: </p>
+                <ul>
+                {% for s in rd_solution %}
+                    {% if s.risk_disease.name == d.get_disease_name and s.happened == d.happened %}
+                        <li>{{s.get_solution}}</li>
+                    {% endif%}
+                {% endfor %}
+                </ul>
+            {% endif%}
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No Disease Detected</p>
+    {% endif %}
+    
+    <p>--------------------------------------------</p>
+{% endfor %}
+
+{% endblock %}

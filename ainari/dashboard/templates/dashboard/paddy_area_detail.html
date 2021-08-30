@@ -1,0 +1,103 @@
+{% extends 'base_layout.html' %}
+
+{% block content%}
+
+<h1> Details </h1>
+
+<table id="info_table" class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>DateTime</th>
+            <th>Paddy Area</th>
+            <th>Lat/Lon</th>
+            <th>Image</th>
+            <th>RiskDisease-Confidence-Hapenned?</th>
+            <th>Information&Solutions</th>
+            <th>Action Taken?</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for i in info %}
+        <tr>
+            <td>{{i.id}}</td>
+            <td>{{i.date_time}}</td>
+            <td>{{i.paddy_area}}</td>
+            <td>{{i.paddy_area.latitude}}/{{i.paddy_area.longitude}}</td>
+            <td><img src='{{i.paddy_images.url}}' style="width:100px;height:100px;" /> </td>
+
+            {% if i.id in rd_ids%}
+                <td>
+                    <ul>
+                        {% for d in risk_disease %}
+                            {% if d.get_info_id == i.id %}
+                            
+                                <li>
+                                    <p>{{d.get_disease_name}} - {{d.get_confidence}} - {{d.happened}}  </p>
+                                </li>
+                            {% endif%}
+                        {% endfor %}
+                    </ul>
+                </td>
+
+                <td>
+                    <ul>
+                        {% for d in risk_disease %}
+                            {% if d.get_info_id == i.id %}
+                                <li>
+                                    <!-- Default dropend button -->
+                                    <div class="btn-group dropend"> 
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" >
+                                        Actions
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <!-- Dropdown menu links -->
+                                            <li><a class="dropdown-item" href='#'>More Information</a></li>
+                                            {% for s in rd_solution %}
+                                                {% if s.risk_disease.name == d.get_disease_name and s.happened == d.happened %}
+                                                    {% if d.action_taken == False %}
+                                                        <li>
+                                                            <form action="" method="post" class='action_taken'>
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="next" value="{{ request.path }}">
+                                                            <input type="hidden" name="action_name" value="{{s.get_solution}}">
+                                                            <input type="hidden" name="pard_id" value="{{d.id}}">
+                                                            <input type="hidden" name="url" value="{% url 'take_action' %}">
+                                                            <button type="button" class="dropdown-item">{{s.get_solution}}</button>
+                                                            </form>
+                                                        </li>
+                                                    {% else %}
+                                                        <li><a class="dropdown-item disabled" href='#'>{{s.get_solution}}</a></li>
+                                                    {% endif %}
+                                                    
+                                                {% endif%}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </li>
+                            {% endif%}
+                        {% endfor %}
+                    </ul>
+                </td>
+                
+            {% else %}
+                <td>No Risk/Disease Detected</td>
+                <td>No Action required</td>
+            {% endif %}
+            
+            <td>
+                {% for d in risk_disease %}
+                    {% if d.get_info_id == i.id %}
+                        <li>
+                            <p>{{d.action_taken}}</p>
+                        </li>
+                    {% endif%}
+                {% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
