@@ -16,13 +16,11 @@ Including another URLconf
 from django.urls import path, include
 from . import views
 
-app_name = 'dashboard'
+app_name = 'information'
 
 urlpatterns = [
-    path('', views.homepage, name='homepage'),
-    path('paddy_area_detail/<str:paddy_area_name>/', views.paddy_area_detail, name='paddy_area_detail'),
-    path('ajax/take_action/', views.take_action, name='take_action'),
-    path('create_info', views.create_info, name='create_info'),
-    path('test_image', views.test_image, name='test_image'),
+    path('', views.homepage),
+    # path('paddy_area_detail/<str:paddy_area_name>/', views.paddy_area_detail, name='paddy_area_detail'),
+    # path('ajax/take_action/', views.take_action, name='take_action'),
     # path('test/', views.test, name='test')
 ]

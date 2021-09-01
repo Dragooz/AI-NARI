@@ -25,7 +25,7 @@
         <tr>
             <td>{{i.id}}</td>
             <td>{{i.date_time}}</td>
-            <td><a href='{% url "paddy_area_detail" i.paddy_area %}'>{{i.paddy_area}}</a></td>
+            <td><a href='{% url "dashboard:paddy_area_detail" i.paddy_area %}'>{{i.paddy_area}}</a></td>
             <td>{{i.paddy_area.latitude}}/{{i.paddy_area.longitude}}</td>
             <td><img src='{{i.paddy_images.url}}' style="width:100px;height:100px;" /> </td>
             {{healthy_ids}}

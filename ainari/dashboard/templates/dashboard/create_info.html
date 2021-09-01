@@ -1,0 +1,67 @@
+{% extends 'base_layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block content%}
+
+<h1> Create Paddy Area Information </h1>
+
+<form class='site-form' action="{% url 'dashboard:create_info' %}" method="post" enctype='multipart/form-data'>
+    {% csrf_token %}
+
+    <div class="row mb-2 justify-content-center">
+        <div class="col-6">
+            {{ form.paddy_area|as_crispy_field }}
+        </div>
+    </div>
+
+    <div class="row mb-2 justify-content-center">
+        <div class="col-6">
+            {{ form.paddy_height|as_crispy_field }}
+        </div>
+        <div class="col-6">
+            {{ form.humidity|as_crispy_field }}
+        </div>
+    </div>
+    
+    <div class="row mb-2 justify-content-center">
+        <div class="col-6">
+            {{ form.temperature|as_crispy_field }}
+        </div>
+        <div class="col-6">
+            {{ form.water_level|as_crispy_field }}
+        </div>
+    </div>
+
+    <div class="row mb-2 justify-content-center">
+        <div class="col-6">
+            {{ form.soil_nitrogen|as_crispy_field }}
+        </div>
+        <div class="col-6">
+            {{ form.paddy_images|as_crispy_field }}
+        </div>
+    </div>
+
+    <div>
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <!-- {{ form|crispy }} -->
+
+    <div class='row justify-content-center' style='margin-bottom:20px;'>
+        <button type='submit' class='col-6 btn-primary'>Submit</button>
+    </div>
+</form>
+
+{% endblock %}

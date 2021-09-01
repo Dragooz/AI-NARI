@@ -48,3 +48,6 @@ class PaddyAreaRiskDisease(models.Model): #PAI_D_Intermediate
 
     def get_confidence(self):
         return self.confidence
+
+class TestImage(models.Model):
+    paddy_images = models.ImageField(default='default.png', blank=True)

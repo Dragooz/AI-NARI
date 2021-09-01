@@ -54,16 +54,21 @@
                                         <ul class="dropdown-menu">
                                             <!-- Dropdown menu links -->
                                             <li><a class="dropdown-item" href='#'>More Information</a></li>
+                                            
                                             {% for s in rd_solution %}
+                                                <!-- <li>{{s.get_solution}}</li> -->
+                                                <!-- <li>s.risk_disease.name: {{s.risk_disease.name}}, d.get_disease_name: {{d.get_disease_name}}, </li>
+                                                <li>s.happened: {{s.happened}}, d.happened: {{d.happened}}, solution:{{s.get_solution}}</li> -->
+                                                
                                                 {% if s.risk_disease.name == d.get_disease_name and s.happened == d.happened %}
                                                     {% if d.action_taken == False %}
                                                         <li>
-                                                            <form action="" method="post" class='action_taken'>
+                                                            <form action="" method="post" class='action_taken_{{d.get_info_id}}_{{d.id}}_{{s.id}}'>
                                                             {% csrf_token %}
-                                                            <input type="hidden" name="next" value="{{ request.path }}">
-                                                            <input type="hidden" name="action_name" value="{{s.get_solution}}">
-                                                            <input type="hidden" name="pard_id" value="{{d.id}}">
-                                                            <input type="hidden" name="url" value="{% url 'take_action' %}">
+                                                            <input type="hidden" name="next_{{d.get_info_id}}_{{d.id}}_{{s.id}}" value="{{ request.path }}">
+                                                            <input type="hidden" name="action_name_{{d.get_info_id}}_{{d.id}}_{{s.id}}" value="{{s.get_solution}}">
+                                                            <input type="hidden" name="pard_id_{{d.get_info_id}}_{{d.id}}_{{s.id}}" value="{{d.id}}">
+                                                            <input type="hidden" name="url_{{d.get_info_id}}_{{d.id}}_{{s.id}}" value="{% url 'dashboard:take_action' %}">
                                                             <button type="button" class="dropdown-item">{{s.get_solution}}</button>
                                                             </form>
                                                         </li>
@@ -99,5 +104,60 @@
     {% endfor %}
     </tbody>
 </table>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        {% for i in info %}
+            {% if i.id in rd_ids%}
+                {% for d in risk_disease %}
+                    {% if d.get_info_id == i.id %}
+                        {% for s in rd_solution %}
+                            {% if s.risk_disease.name == d.get_disease_name and s.happened == d.happened %}
+                                {% if d.action_taken == False %}
+                                    
+                                $('.action_taken_{{d.get_info_id}}_{{d.id}}_{{s.id}}').click(function(){
+                                        next = $('input[name="next_{{d.get_info_id}}_{{d.id}}_{{s.id}}"]').val()
+                                        pard_id = $('input[name="pard_id_{{d.get_info_id}}_{{d.id}}_{{s.id}}"]').val()
+                                        action_name = $('input[name="action_name_{{d.get_info_id}}_{{d.id}}_{{s.id}}"]').val()
+                                        url = $('input[name="url_{{d.get_info_id}}_{{d.id}}_{{s.id}}"]').val()
+                                        csrfmiddlewaretoken= $('input[name="csrfmiddlewaretoken"]').val()
+
+                                        $.ajax({
+                                            url: url, //which url to send data to
+                                            data: {
+                                            'csrfmiddlewaretoken': csrfmiddlewaretoken,
+                                            'next': next,
+                                            'pard_id': pard_id,
+                                            'action_name': action_name,
+                                            },
+                                            type: 'post',
+                                            success: function(response){
+                                                if (response.success) {
+                                                    success_answer = 'ajax call success. ' + action_name + ' is performed.'
+                                                    alert(success_answer);
+                                                    // window.location=window.location; //reload using this to avoid warning
+                                                    window.location.reload()
+                                                    // here you update the HTML to change the active to innactive
+                                                }else{
+                                                    fail_answer = 'ajax call not success. ' + action_name + ' is not performed.'
+                                                    alert("ajax call not success.");
+                                                }
+                                            }
+                                        })
+                                    })
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+        {% endfor %}
+
+});
+
+</script>
 
 {% endblock %}

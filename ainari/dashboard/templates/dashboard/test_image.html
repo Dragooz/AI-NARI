@@ -1,0 +1,55 @@
+{% extends 'base_layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block content%}
+
+<h1> Create Paddy Area Information </h1>
+
+<form class='site-form' action="{% url 'dashboard:test_image' %}" method="post" enctype='multipart/form-data'>
+    {% csrf_token %}
+
+    <div class="row mb-2 justify-content-center">
+        <div class="col-6">
+            {{ form.paddy_images|as_crispy_field }}
+        </div>
+    </div>
+
+    {% if info %}
+        <div class="row mb-2 justify-content-center">
+            <div class="col-6" style= 'display:flex;justify-content: right;'>
+                <img src='{{info.image}}' style="width:200px;height:200px;" />
+            </div>
+            <div class="col-6">
+                {% for disease, prob in info.diseases_probability %}
+                    <div class="row mb-4">{{disease}} - {{prob}}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+
+    {% endif %}
+
+    <div>
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <!-- {{ form|crispy }} -->
+
+    <div class='row justify-content-center' style='margin-bottom:20px;'>
+        <button type='submit' class='col-6 btn-primary'>Submit</button>
+    </div>
+</form>
+
+{% endblock %}

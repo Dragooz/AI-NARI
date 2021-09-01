@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import PaddyAreaDetail, PaddyAreaInfo, PaddyAreaRiskDisease
+from .models import PaddyAreaDetail, PaddyAreaInfo, PaddyAreaRiskDisease, TestImage
 
 # Register your models here.
 
@@ -12,6 +12,7 @@ class PaddyAreaInfoAdmin(admin.ModelAdmin):
 
 admin.site.register(PaddyAreaDetail)
 admin.site.register(PaddyAreaInfo, PaddyAreaInfoAdmin)
+admin.site.register(TestImage)
 
 # admin.site.register(PaddyAreaInfo)
 # admin.site.register(PaddyAreaDetail)
