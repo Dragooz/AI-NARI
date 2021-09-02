@@ -1,20 +1,24 @@
 from django.shortcuts import render
-from .models import PaddyAreaDetail, PaddyAreaInfo, PaddyAreaRiskDisease
-from information.models import RiskDiseaseSolutionRelationship, RiskDisease
 from django.db.models import Max
 from django.http import JsonResponse
 from django.shortcuts import redirect 
 from django.forms.models import model_to_dict
+from django.conf import settings
+
+from .models import PaddyAreaDetail, PaddyAreaInfo, PaddyAreaRiskDisease
+from information.models import RiskDiseaseSolutionRelationship, RiskDisease
+
 from . import forms
 from . import utils
+from . import my_folium
+
+from collections import defaultdict
+
 import os
 import time
-from django.conf import settings
-from collections import defaultdict
 import requests
 import json
 import re
-import base64
 
 # Create your views here.
 def homepage(request):
@@ -28,26 +32,41 @@ def homepage(request):
     # print(queryset.values())
     # print(paddy_area_info)
     #objects
-    risk_disease = PaddyAreaRiskDisease.objects.filter(paddy_area_info__in=paddy_area_info)
-    rd_solution = RiskDiseaseSolutionRelationship.objects.filter(risk_disease__id__in=risk_disease.values_list('id'))
+    pd_risk_disease = PaddyAreaRiskDisease.objects.filter(paddy_area_info__in=paddy_area_info)
+    rd_solution = RiskDiseaseSolutionRelationship.objects.filter(risk_disease__id__in=pd_risk_disease.values_list('id'))
     # print(rd_solution)
 
     #ids
     potential_ids = set()
     warning_ids = set()
 
-    for i in risk_disease.values():
+    for i in pd_risk_disease.values():
         if i['happened'] == True and i['action_taken'] == False:
             warning_ids.add(i['paddy_area_info_id'])
         elif i['happened'] == False and i['action_taken'] == False:
             potential_ids.add(i['paddy_area_info_id'])
 
+    #map
+    colour = []
+    for i in paddy_area_info:
+        if warning_ids or potential_ids:
+            if i.id in warning_ids:
+                colour.append('red')
+            elif i.id in potential_ids:
+                colour.append('yellow')
+            else:
+                colour.append('green')
+
+    #map
+    map_ = my_folium.getMap(ee=False, paddy_area_info=paddy_area_info, colour=colour)
+
     informations = {
         'info': paddy_area_info,
-        'risk_disease': risk_disease,
+        'pd_risk_disease': pd_risk_disease,
         'rd_solution': rd_solution,
         'potential_ids': potential_ids,
         'warning_ids': warning_ids,
+        'map': map_,
     }
 
     return render(request, 'dashboard/homepage.html', informations)
@@ -56,21 +75,46 @@ def paddy_area_detail(request, paddy_area_name):
     paddy_area_info = PaddyAreaInfo.objects.filter(paddy_area__name=paddy_area_name).order_by('-date_time')
     # print(paddy_area_info.values_list('id'))
     #objects
-    risk_disease = PaddyAreaRiskDisease.objects.filter(paddy_area_info__id__in = paddy_area_info.values_list('id'))
+    pd_risk_disease = PaddyAreaRiskDisease.objects.filter(paddy_area_info__id__in = paddy_area_info.values_list('id'))
     # print('rd:', [i.risk_disease.name for i in risk_disease])
     # print('rd:', [i.risk_disease.id for i in risk_disease])
-    risk_disease_ids = [i.risk_disease.id for i in risk_disease]
+    risk_disease_ids = set([i.risk_disease.id for i in pd_risk_disease]) #the ids of the risk_disease
     # print(risk_disease.values_list('id'))
     rd_solution = RiskDiseaseSolutionRelationship.objects.filter(risk_disease__id__in=risk_disease_ids)
     # print('rd:', rd_solution)
     # print('rd:', [i.solution.name for i in rd_solution])
-    rd_ids = [i['paddy_area_info_id'] for i in risk_disease.values()]
+    rd_ids = set([i['paddy_area_info_id'] for i in pd_risk_disease.values()])
+    # print('rd_ids:', rd_ids)
+
+    #maps
+
+    rd_check_colour = PaddyAreaRiskDisease.objects.filter(paddy_area_info=paddy_area_info[0])
+    #ids
+    potential_ids = set()
+    warning_ids = set()
+
+    for i in rd_check_colour.values():
+        if i['happened'] == True and i['action_taken'] == False:
+            warning_ids.add(i['paddy_area_info_id'])
+        elif i['happened'] == False and i['action_taken'] == False:
+            potential_ids.add(i['paddy_area_info_id'])
+
+    if warning_ids:
+        colour = ['red']
+    elif potential_ids:
+        colour = ['yellow']
+    else:
+        colour = ['green']
+
+    #declare map
+    map_ = my_folium.getMap(ee=False, paddy_area_info=paddy_area_info, colour=colour)
 
     informations = {
         'info': paddy_area_info,
-        'risk_disease': risk_disease,
+        'pd_risk_disease': pd_risk_disease,
         'rd_solution': rd_solution,
         'rd_ids':rd_ids,
+        'map': map_,
     }
 
     return render(request, 'dashboard/paddy_area_detail.html', informations)
@@ -104,13 +148,10 @@ def create_info(request):
             instance = form.save(commit=True) #true here to save the img to db in order to be retrieved
 
             #hardcode the path first, future change
-            a= str(settings.BASE_DIR).split('\\')
-            a[0] = 'D:\\'
-            b= str(instance.paddy_images.url).split('/')
-            my_image_test_path = os.path.join(*a,*b)
 
+            my_image_path = utils.get_image_directory(instance.paddy_images.url)
             print('predicting...')
-            predictions = utils.use_model(my_image_test_path)
+            predictions = utils.use_model(my_image_path)
             print('prediction done!')
             
             diseases = []
@@ -149,13 +190,11 @@ def test_image(request):
             instance = form.save(commit=True) #true here to save the img to db in order to be retrieved
 
             #hardcode the path first, future change
-            a= str(settings.BASE_DIR).split('\\')
-            a[0] = 'D:\\'
-            b= str(instance.paddy_images.url).split('/')
-            my_image_test_path = os.path.join(*a,*b)
+
+            my_image_path = utils.get_image_directory(instance.paddy_images.url)
 
             print('predicting...')
-            predictions = utils.use_model(my_image_test_path)
+            predictions = utils.use_model(my_image_path)
             print('prediction done!')
             
             diseases = []

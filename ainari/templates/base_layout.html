@@ -62,9 +62,18 @@
             </nav>
 
         </header>
-        <div class='wrapper container'>
+
+        <div class='wrapper container mb-5'>
+          <div class="row justify-content-center">
+            <div class="col-8 border border-5 border-dark rounded mb-2 mt-2 pt-2 pb-2">
+                {% block map %}
+                {% endblock %}
+            </div>
+          </div>
+
             {% block content %}
             {% endblock %}
+
         </div>
     
     </body>

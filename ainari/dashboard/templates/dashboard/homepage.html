@@ -1,9 +1,13 @@
 {% extends 'base_layout.html' %}
 
+{% block map %}
+    <div>
+        {{map|safe}}
+    </div>
+{% endblock %}
+
+
 {% block content%}
-
-
-
 <h1> Welcome to AINari Dashboard!</h1>
 
 <table id="info_table" class="table table-striped table-dark">
@@ -38,7 +42,7 @@
             {% endif %}
             <td>
                 <ul>
-                    {% for d in risk_disease %}
+                    {% for d in pd_risk_disease %}
                         {% if d.get_info_id == i.id %}
                         
                             <li>
@@ -49,7 +53,7 @@
                 </ul>
             </td>
             <td>
-                {% for d in risk_disease %}
+                {% for d in pd_risk_disease %}
                     {% if d.get_info_id == i.id %}
                         <li>
                             <p>{{d.action_taken}}</p>
@@ -63,10 +67,7 @@
     </tbody>
 </table>
 
-
-
-
-
+<!-- 
 {% for i in info %}
     <p>ID: {{i.id}}</p>
     <p>Date: {{i.date_time}}</p>
@@ -84,7 +85,7 @@
         <p> Risk/Disease - Confidence:</p>
         
         <ul>
-        {% for d in risk_disease %}
+        {% for d in pd_risk_disease %}
             {% if d.get_id == i.id %}
             
                 <li>
@@ -107,6 +108,6 @@
     {% endif %}
     
     <p>--------------------------------------------</p>
-{% endfor %}
+{% endfor %} -->
 
 {% endblock %}
