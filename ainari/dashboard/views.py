@@ -64,7 +64,10 @@ def homepage(request):
                 colour.append('green')
 
     #map
-    map_ = my_folium.getMap(ee=False, paddy_area_info=paddy_area_info, colour=colour)
+    if paddy_area_info != []:
+        map_ = my_folium.getMap(ee=False, paddy_area_info=paddy_area_info, colour=colour)
+    else:
+        map_ = my_folium.getMap()
 
     informations = {
         'info': paddy_area_info,
@@ -118,8 +121,11 @@ def paddy_area_detail(request, paddy_area_name):
     else:
         colour = ['green']
 
-    #declare map
-    map_ = my_folium.getMap(ee=False, paddy_area_info=paddy_area_info, colour=colour)
+    #map
+    if paddy_area_info != []:
+        map_ = my_folium.getMap(ee=False, paddy_area_info=paddy_area_info, colour=colour)
+    else:
+        map_ = my_folium.getMap()
 
     informations = {
         'info': paddy_area_info,

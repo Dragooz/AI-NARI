@@ -11,7 +11,7 @@ from django.conf import settings
 
 def use_model(img_path):
     url="https://visionpaddy-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/8a7f3e83-d2ed-4b14-9d03-e6f32addcd74/classify/iterations/paddy%20disease/image"
-    headers={'content-type':'application/octet-stream','Prediction-Key':'c36745d24f8349ed94b4e4c38399f307'}
+    headers={'content-type':'application/octet-stream','Prediction-Key': settings.PREDICTION_KEY}
     r =requests.post(url,data=open(img_path,"rb"),headers=headers)
     content = json.loads(r.content.decode('utf-8'))
 
@@ -48,7 +48,7 @@ def use_modelv2(img_path):
     body = str.encode(json.dumps(data))
 
     url = 'http://23.99.111.74:80/api/v1/service/ainari-v1/score'
-    api_key = 'bnzCIcdiVUuHQSSa8GKbqJtitQIt3yhq' # Replace this with the API key for the web service
+    api_key = settings.API_KEY # Replace this with the API key for the web service
     headers = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_key)}
 
     req = urllib.request.Request(url, body, headers)

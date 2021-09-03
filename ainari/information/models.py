@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class RiskDisease(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     risk_disease_image = models.ImageField(default='default.png', blank=True, upload_to='risk_disease_images')
 
@@ -14,7 +14,7 @@ class RiskDisease(models.Model):
         return ' '.join([i.capitalize() for i in self.name.split('_')])    
 
 class Solution(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     solution_image = models.ImageField(default='default.png', blank=True, upload_to='solution_images')
     risk_disease = models.ManyToManyField(RiskDisease, through='RiskDiseaseSolutionRelationship')
@@ -23,7 +23,7 @@ class Solution(models.Model):
         return self.name
 
 class Recommendation(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     recommendation_image = models.ImageField(default='default.png', blank=True, upload_to='recommendations_images')
     risk_disease = models.ManyToManyField(RiskDisease, through='RiskDiseaseRecommendationRelationship')

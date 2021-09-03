@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class PaddyAreaDetail(models.Model):
-    name = models.CharField(max_length=5)
+    name = models.CharField(max_length=5, unique=True)
     state = models.CharField(max_length=20)
     longitude = models.FloatField()
     latitude = models.FloatField()
@@ -27,7 +27,7 @@ class PaddyAreaInfo(models.Model): #child
     soil_phosphorous = models.FloatField(default=0)
     soil_potassium = models.FloatField(default=0)
     soil_pH = models.FloatField(default=0)
-    rail_fall = models.FloatField(default=0)
+    rain_fall = models.FloatField(default=0)
     paddy_images = models.ImageField(default='default.png', blank=True, upload_to='info_images')
 
     #many-to-many

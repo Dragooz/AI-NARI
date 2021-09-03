@@ -1,0 +1,9 @@
+ID,Name,Description,Image
+1,Apply Fertilizer,"Identify the Nutirent in Deficient and apply the needed fertilizer. Ensuring the paddy plant does not suffer from nutrient deficiency which eventually causing disease to paddy plant. If the soil is lacking of Nitrogen, apply fertilizer that has can boost the nitrogent content of the soil",./dummy_data/image/apply_fertilizer2.jpg
+2,Clean and Remove Weeds,Poor hygiene problem of paddy might facilitate the spread of the disease. Cleaning and removing weeds help to eliminate the chance of disease transmission from seed to seedlings,./dummy_data/image/remove_weed2.jpg
+3,Reduce Fertilizer and Avoid Over-Fertilizing,Split fertilizer application in two or more treatments. Excessive use of fertilizer can increase blast intensity.,./dummy_data/image/overfertilizing.jpg
+4,Apply Fungicides,Systemic fungicides like triazoles and strobilurins can be used judiciously for control to control blast. A fungicide application at heading can be effective in controlling the disease.,./dummy_data/image/fungicides.jpg
+5,Collect Adult Bugs ,"Collect adult bugs with a sweeping net, preferably early in the morning when they are less mobile",./dummy_data/image/collect_bug.jpg
+6,Apply Pesticide,Spraying of methyl parathion 0.05% or Quinalphos 0.05%.,./dummy_data/image/pesticide.jpg
+7,Close Field Water Drainage System and Activate Water Pump  ,Continuous flooding can limit blast development. Field water drainage encourage nitrate formation and may lead to drought stress.,./dummy_data/image/water_drainage_system.jpg
+8,Apply Herbicide,"Monitor the field to check the existence of unwated weeds and grasses. If true, apply herbicide to kill unwanted weeds and grass in the field and nearby areas to remove alternate hosts that allow the fungus to survive and infect the rice crops.",./dummy_data/image/herbicide.jpg

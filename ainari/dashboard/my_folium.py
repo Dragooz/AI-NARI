@@ -211,9 +211,12 @@ def getMap(paddy_area_info=None, colour=None, ee=False):
         folium.Map.add_ee_layer = add_ee_layer
 
     # Create a folium map object.
-    my_map = folium.Map(location=[paddy_area_info[0].paddy_area.latitude, 
+    if paddy_area_info != None:
+        my_map = folium.Map(location=[paddy_area_info[0].paddy_area.latitude, 
                                 paddy_area_info[0].paddy_area.longitude], 
                         zoom_start=20)
+    else:
+        my_map = folium.Map(location=[2.226888, 102.166600], zoom_start=20)
 
     # no pre-defined markers - Default
     if paddy_area_info == None:
@@ -239,10 +242,14 @@ def getMap(paddy_area_info=None, colour=None, ee=False):
             iframe = IFrame(html(encoded.decode('UTF-8')), width=220, height=220)
             popup = folium.Popup(iframe, max_width=300)
 
+            marker_color = c
+            if c=='yellow':
+                marker_color = 'orange'
+
             mark = folium.Marker(location=[i.paddy_area.latitude, i.paddy_area.longitude], 
                                  popup=popup,
                                  tooltip=i.paddy_area.name,
-                                 icon=folium.Icon(color=c, icon_color=None),
+                                 icon=folium.Icon(color=marker_color, icon_color=None),
                                  )
             feature_group.add_child(mark)
 
@@ -253,7 +260,7 @@ def getMap(paddy_area_info=None, colour=None, ee=False):
                                             fill = True)
 
             feature_group.add_child(circle)
-            
+
     # add markers as folium layer
     my_map.add_child(feature_group)
 
