@@ -27,6 +27,7 @@ class PaddyAreaInfo(models.Model): #child
     soil_phosphorous = models.FloatField(default=0)
     soil_potassium = models.FloatField(default=0)
     soil_pH = models.FloatField(default=0)
+    rail_fall = models.FloatField(default=0)
     paddy_images = models.ImageField(default='default.png', blank=True, upload_to='info_images')
 
     #many-to-many

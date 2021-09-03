@@ -39,10 +39,28 @@
             {{ form.soil_nitrogen|as_crispy_field }}
         </div>
         <div class="col-6">
-            {{ form.paddy_images|as_crispy_field }}
+            {{ form.soil_phosphorous|as_crispy_field }}
         </div>
     </div>
 
+    <div class="row mb-2 justify-content-center">
+        <div class="col-6">
+            {{ form.soil_potassium|as_crispy_field }}
+        </div>
+        <div class="col-6">
+            {{ form.soil_pH|as_crispy_field }}
+        </div>
+    </div>
+
+    <div class="row mb-2 justify-content-center">
+        <div class="col-6">
+            {{ form.rail_fall|as_crispy_field }}
+        </div>
+        <div class="col-6">
+            {{ form.paddy_images|as_crispy_field }}
+        </div>
+    </div>
+    
     <div>
         {% if form.errors %}
             {% for field in form %}
