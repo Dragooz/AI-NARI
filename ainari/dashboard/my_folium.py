@@ -10,15 +10,16 @@ from folium import IFrame
 #utils
 from . import utils
 import base64
+import os
 
-class Markers:
-  def __init__(self, latitude_list, longitude_list, marker_name_list, color_list, icon_color_list, popup):
-    self.latitude_list = latitude_list
-    self.longitude_list = longitude_list
-    self.marker_name_list = marker_name_list
-    self.color_list = color_list
-    self.icon_color_list = icon_color_list
-    self.popup = popup
+from django.conf import settings
+
+def getPrivateKey():
+    service_account = 'umhackaton@umhackaton.iam.gserviceaccount.com'
+    private_key = os.path.join(settings.BASE_DIR, 'assets', 'privatekey.json')
+    credentials = ee.ServiceAccountCredentials(service_account, private_key)
+    ee.Initialize(credentials)
+    print('private key called!')
 
 # Authenticate to use Google Earth
 def getAuth():
@@ -202,7 +203,7 @@ def addCustomPolygon():
 def getMap(paddy_area_info=None, colour=None, ee=False):
     if ee:
         # Authenticate to use google earth
-        getAuth()
+        getPrivateKey()
 
         # Get the google earth base maps
         basemaps = getBaseMap()
@@ -211,6 +212,7 @@ def getMap(paddy_area_info=None, colour=None, ee=False):
         folium.Map.add_ee_layer = add_ee_layer
 
     # Create a folium map object.
+    # guoxuan_location = [6.130130, 102.197939]
     if paddy_area_info != None:
         my_map = folium.Map(location=[paddy_area_info[0].paddy_area.latitude, 
                                 paddy_area_info[0].paddy_area.longitude], 
@@ -218,6 +220,10 @@ def getMap(paddy_area_info=None, colour=None, ee=False):
     else:
         my_map = folium.Map(location=[2.226888, 102.166600], zoom_start=20)
 
+    if ee:
+        basemaps['Google Maps'].add_to(my_map)
+        basemaps['Google Satellite Hybrid'].add_to(my_map)
+ 
     # no pre-defined markers - Default
     if paddy_area_info == None:
         lat_lst = [2.226888, 2.226888, 2.226888]

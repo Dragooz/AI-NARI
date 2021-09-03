@@ -7,7 +7,7 @@
 
 <div class="information">
         {% for d in disease_obj %}
-        <div>
+        <div class='information-details table-border'>
             <a href="{% url 'information:information_detail' d.id %}"><img src='{{ d.risk_disease_image.url }}' style="width:200px;height:200px;" /></a>
             <h2><a href="{% url 'information:information_detail' d.id %}">{{ d.display_name }}</a></h2>
             <p>{{ d.description }}</p>

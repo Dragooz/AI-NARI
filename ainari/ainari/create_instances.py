@@ -73,7 +73,7 @@ def createRisk():
         next(csvreader)
         for row in csvreader:
             information_risk = RiskDisease()
-            information_risk.name = row[1]
+            information_risk.name = row[1].lower().strip().replace(' ', '_')
             information_risk.description = row[2]
             # information_risk.risk_disease_image= row[3]
             information_risk.risk_disease_image.save(os.path.basename(row[3]), File(open(row[3], "rb")))

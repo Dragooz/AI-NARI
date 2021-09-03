@@ -196,7 +196,7 @@ def create_info(request):
             #add relationship
             
             for i in range(len(diseases)):
-                if probability[i] >= 0.5 and diseases[i] != 'Healthy':
+                if probability[i] >= 0.5 and diseases[i] != 'healthy':
                     instance.risk_disease.add(RiskDisease.objects.get(name=diseases[i]), 
                                               through_defaults={'confidence':probability[i], 'happened':True})
 
@@ -244,7 +244,7 @@ def test_image(request):
                     print(v)
                     if 'Scored Prob' in k:
                         diseases.append(k.split('_')[-1].strip())
-                        probability.append(v)
+                        probability.append(round(v*100, 2))
 
             info = {
                 'image':instance.paddy_images.url,

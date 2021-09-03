@@ -37,6 +37,7 @@ a:hover{
 /* NavBar */
 
 #navbarSupportedContent ul li a{
+    font-size:20px;
     color: #66FCF1;
     opacity:80%;
 }
@@ -124,6 +125,15 @@ ul.show > li > a{
     display:grid;
     grid-template-columns: 1fr 1fr 1fr;
     justify-items: center;
+}
+
+.information-details{
+    padding:10px;
+    margin:10px;
+}
+
+.information-details > p{
+    text-align: justify;
 }
 
 .image-border{
