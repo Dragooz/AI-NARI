@@ -1,20 +1,24 @@
 {% extends 'base_layout.html' %}
 
 {% block map %}
-    <div>
-        {{map|safe}}
+    <div class="row justify-content-center">
+        <div class="col-8 map-border mb-2 mt-2 pt-2 pb-2">
+            {{map|safe}}
+        </div>
     </div>
 {% endblock %}
 
 
 {% block content%}
 
-<h1> Details </h1>
+<div class='title'>
+    <h1> Paddy Area Details </h1>
+</div>
 
 <table id="info_table" class="table table-striped table-dark">
     <thead>
         <tr>
-            <th>ID</th>
+            <!-- <th>ID</th> -->
             <th>DateTime</th>
             <th>Paddy Area</th>
             <th>Lat/Lon</th>
@@ -28,7 +32,7 @@
     <tbody>
     {% for i in info %}
         <tr>
-            <td>{{i.id}}</td>
+            <!-- <td>{{i.id}}</td> -->
             <td>{{i.date_time}}</td>
             <td>{{i.paddy_area}}</td>
             <td>{{i.paddy_area.latitude}}/{{i.paddy_area.longitude}}</td>
@@ -55,22 +59,22 @@
                                 <li>
                                     <!-- Default dropend button -->
                                     <div class="btn-group dropend"> 
-                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" >
+                                        <button type="button" class="dropdown-button dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" >
                                         Actions
                                         </button>
                                         <ul class="dropdown-menu">
                                             <!-- Dropdown menu links -->
-                                            <li><a class="dropdown-item" href='#'>More Information</a></li>
+                                            <li><a class="dropdown-item" href='{% url "information:information_detail" d.risk_disease.id %}'>More Information</a></li>
                                             
                                             {% for s in rd_solution %}
                                                 <!-- <li>{{s.get_solution}}</li> -->
                                                 <!-- <li>s.risk_disease.name: {{s.risk_disease.name}}, d.get_disease_name: {{d.get_disease_name}}, </li>
                                                 <li>s.happened: {{s.happened}}, d.happened: {{d.happened}}, solution:{{s.get_solution}}</li> -->
                                                 
-                                                {% if s.risk_disease.name == d.get_disease_name and s.happened == d.happened %}
+                                                {% if s.risk_disease.name == d.get_disease_name_raw and s.happened == d.happened %}
                                                     {% if d.action_taken == False %}
                                                         <li>
-                                                            <form action="" method="post" class='action_taken_{{d.get_info_id}}_{{d.id}}_{{s.id}}'>
+                                                            <form action="" method="post" class='action_button action_taken_{{d.get_info_id}}_{{d.id}}_{{s.id}}'>
                                                             {% csrf_token %}
                                                             <input type="hidden" name="next_{{d.get_info_id}}_{{d.id}}_{{s.id}}" value="{{ request.path }}">
                                                             <input type="hidden" name="action_name_{{d.get_info_id}}_{{d.id}}_{{s.id}}" value="{{s.get_solution}}">
@@ -115,13 +119,12 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-
         {% for i in info %}
             {% if i.id in rd_ids%}
                 {% for d in pd_risk_disease %}
                     {% if d.get_info_id == i.id %}
                         {% for s in rd_solution %}
-                            {% if s.risk_disease.name == d.get_disease_name and s.happened == d.happened %}
+                            {% if s.risk_disease.name == d.get_disease_name_raw and s.happened == d.happened %}
                                 {% if d.action_taken == False %}
                                     
                                 $('.action_taken_{{d.get_info_id}}_{{d.id}}_{{s.id}}').click(function(){
@@ -160,9 +163,7 @@
                     {% endif %}
                 {% endfor %}
             {% endif %}
-
         {% endfor %}
-
 });
 
 </script>

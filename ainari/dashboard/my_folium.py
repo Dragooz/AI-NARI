@@ -246,6 +246,14 @@ def getMap(paddy_area_info=None, colour=None, ee=False):
                                  )
             feature_group.add_child(mark)
 
+            #circles
+            circle = folium.Circle(location=[i.paddy_area.latitude, i.paddy_area.longitude], 
+                                            color = c, 
+                                            radius = 100, 
+                                            fill = True)
+
+            feature_group.add_child(circle)
+            
     # add markers as folium layer
     my_map.add_child(feature_group)
 

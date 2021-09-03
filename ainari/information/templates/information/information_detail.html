@@ -1,0 +1,78 @@
+{% extends 'base_layout.html' %}
+
+{% block content%}
+<div class='title'>
+    <h1> Welcome to AINari Library Details!</h1>
+</div>
+
+<div class="information-detail">
+    <div class='flex-container'>
+        <div class='image-border'>
+            <img src='{{ disease_obj.risk_disease_image.url }}' style="width:200px;height:200px;"/>
+        </div>
+        <div class='information-content'>
+            <h2>{{ disease_obj.display_name }}</h2>
+            <p>{{ disease_obj.description }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="information-solution">
+    <div class='title'>
+        <h1> Solutions </h1>
+    </div>
+
+    <div class="information-detail">
+        {% for s in rd_solution_obj %}
+            {% if s.happened %}
+            <div class='flex-container-solution'>
+                <div class='image-border'>
+                    <img src='{{ s.solution.solution_image.url }}' style="width:200px;height:200px;"/>
+                </div>
+                <div class='information-content'>
+                    <h2>{{ s.solution.name }}</h2>
+                    <p>{{s.solution.description}}</p>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class='title'>
+        <h1> Precautions </h1>
+    </div>
+    <div class="information-detail">
+        {% for s in rd_solution_obj %}
+            {% if not s.happened %}
+            <div class='flex-container-solution'>
+                <div class='image-border'>
+                    <img src='{{ s.solution.solution_image.url }}' style="width:200px;height:200px;"/>
+                </div>
+                <div class='information-content'>
+                    <h2>{{ s.solution.name }}</h2>
+                    <p>{{s.solution.description}}</p>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class='title'>
+        <h1> Recommendation </h1>
+    </div>
+    <div class="information-detail">
+        {% for r in recommendation_obj %}
+            <div class='flex-container-solution'>
+                <div class='image-border'>
+                    <img src='{{ r.recommendation.recommendation_image.url }}' style="width:200px;height:200px;"/>
+                </div>
+                <div class='information-content'>
+                    <h2>{{ r.recommendation.name }}</h2>
+                    <p>{{r.recommendation.description}}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

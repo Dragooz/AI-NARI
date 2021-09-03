@@ -3,7 +3,9 @@
 
 {% block content%}
 
-<h1> Create Paddy Area Information </h1>
+<div class='title'>
+    <h1> Create Paddy Area Information </h1>
+</div>
 
 <form class='site-form' action="{% url 'dashboard:create_info' %}" method="post" enctype='multipart/form-data'>
     {% csrf_token %}
@@ -60,7 +62,7 @@
     <!-- {{ form|crispy }} -->
 
     <div class='row justify-content-center' style='margin-bottom:20px;'>
-        <button type='submit' class='col-6 btn-primary'>Submit</button>
+        <button type='submit' class='col-6 submit-button'>Submit</button>
     </div>
 </form>
 

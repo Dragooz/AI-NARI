@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -21,7 +20,7 @@
     </head>
     <body>
         <header class='wrapper'>
-            <nav class="navbar navbar-expand-lg navbar-black bg-dark">
+            <nav class="navbar navbar-expand-lg">
                 <div class="container">
                   <a class="navbar-brand" href="{% url 'homepage' %}">
                       <img src="{% static 'logo.png' %}" alt='AINARI' style='height:70px;'/>
@@ -37,12 +36,12 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'dashboard:create_info' %}">Create New Paddy Area Information</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'dashboard:test_image' %}">Test Images</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'dashboard:test_image' %}">Test Images</a>
                       </li>
-                      <!-- <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                      </li> -->
-                      <li class="nav-item dropdown">
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'information:information' %}">Informations</a>
+                      </li>
+                      <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                           Dropdown
                         </a>
@@ -52,10 +51,10 @@
                           <li><hr class="dropdown-divider"></li>
                           <li><a class="dropdown-item" href="#">Something else here</a></li>
                         </ul>
-                      </li>
-                      <li class="nav-item">
+                      </li> -->
+                      <!-- <li class="nav-item">
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                      </li>
+                      </li> -->
                     </ul>
                   </div>
                 </div>
@@ -64,16 +63,11 @@
         </header>
 
         <div class='wrapper container mb-5'>
-          <div class="row justify-content-center">
-            <div class="col-8 border border-5 border-dark rounded mb-2 mt-2 pt-2 pb-2">
-                {% block map %}
-                {% endblock %}
-            </div>
-          </div>
+            {% block map %}
+            {% endblock %}
 
             {% block content %}
             {% endblock %}
-
         </div>
     
     </body>

@@ -55,14 +55,14 @@ def use_modelv2(img_path):
 
     try:
         response = urllib.request.urlopen(req)
+        content = json.loads(response.read())
+        return content['Results']['WebServiceOutput0']
 
-        result = response.read()
-        print(result)
     except urllib.error.HTTPError as error:
         print("The request failed with status code: " + str(error.code))
         # Print the headers - they include the requert ID and the timestamp, which are useful for debugging the failure
         print(error.info())
-        print(json.loads(error.read().decode("utf8", 'ignore')))
+        return json.loads(error.read().decode("utf8", 'ignore'))
 
 def get_image_directory(image_instance_path):
     a= str(settings.BASE_DIR).split('\\')

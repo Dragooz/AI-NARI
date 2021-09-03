@@ -40,10 +40,16 @@ def homepage(request):
     potential_ids = set()
     warning_ids = set()
 
+    # for i in pd_risk_disease.values():
+    #     if i['happened'] == True and i['action_taken'] == False:
+    #         warning_ids.add(i['paddy_area_info_id'])
+    #     elif i['happened'] == False and i['action_taken'] == False:
+    #         potential_ids.add(i['paddy_area_info_id'])
+
     for i in pd_risk_disease.values():
-        if i['happened'] == True and i['action_taken'] == False:
+        if i['happened'] == True:
             warning_ids.add(i['paddy_area_info_id'])
-        elif i['happened'] == False and i['action_taken'] == False:
+        elif i['happened'] == False:
             potential_ids.add(i['paddy_area_info_id'])
 
     #map
@@ -93,10 +99,16 @@ def paddy_area_detail(request, paddy_area_name):
     potential_ids = set()
     warning_ids = set()
 
+    # for i in rd_check_colour.values():
+    #     if i['happened'] == True and i['action_taken'] == False:
+    #         warning_ids.add(i['paddy_area_info_id'])
+    #     elif i['happened'] == False and i['action_taken'] == False:
+    #         potential_ids.add(i['paddy_area_info_id'])
+
     for i in rd_check_colour.values():
-        if i['happened'] == True and i['action_taken'] == False:
+        if i['happened'] == True:
             warning_ids.add(i['paddy_area_info_id'])
-        elif i['happened'] == False and i['action_taken'] == False:
+        elif i['happened'] == False:
             potential_ids.add(i['paddy_area_info_id'])
 
     if warning_ids:
@@ -151,24 +163,34 @@ def create_info(request):
 
             my_image_path = utils.get_image_directory(instance.paddy_images.url)
             print('predicting...')
-            predictions = utils.use_model(my_image_path)
-            print('prediction done!')
+            # predictions = utils.use_model(my_image_path)
+            predictions = utils.use_modelv2(my_image_path)
             
             diseases = []
             probability = []
             
+            #modelv1
+            # for dict_ in predictions:
+            #     for k, v in dict_.items():
+            #         if k=='probability':
+            #             probability.append(v)
+            #         elif k=='tagName':
+            #             diseases.append(v)
+
+            #modelv2
             for dict_ in predictions:
                 for k, v in dict_.items():
-                    if k=='probability':
+                    print(k)
+                    print(v)
+                    if 'Scored Prob' in k:
+                        diseases.append(k.split('_')[-1].lower().strip().replace(' ', '_'))
                         probability.append(v)
-                    elif k=='tagName':
-                        diseases.append(v)
+            print('prediction done!')
 
             #add relationship
-
+            
             for i in range(len(diseases)):
                 if probability[i] >= 0.5 and diseases[i] != 'Healthy':
-                    print(diseases[i])
                     instance.risk_disease.add(RiskDisease.objects.get(name=diseases[i]), 
                                               through_defaults={'confidence':probability[i], 'happened':True})
 
@@ -194,18 +216,29 @@ def test_image(request):
             my_image_path = utils.get_image_directory(instance.paddy_images.url)
 
             print('predicting...')
-            predictions = utils.use_model(my_image_path)
+            # predictions = utils.use_model(my_image_path)
+            predictions = utils.use_modelv2(my_image_path)
             print('prediction done!')
             
             diseases = []
             probability = []
             
+            #modelv1
+            # for dict_ in predictions:
+            #     for k, v in dict_.items():
+            #         if k=='probability':
+            #             probability.append(v)
+            #         elif k=='tagName':
+            #             diseases.append(v)
+
+            #modelv2
             for dict_ in predictions:
                 for k, v in dict_.items():
-                    if k=='probability':
+                    print(k)
+                    print(v)
+                    if 'Scored Prob' in k:
+                        diseases.append(k.split('_')[-1].strip())
                         probability.append(v)
-                    elif k=='tagName':
-                        diseases.append(v)
 
             info = {
                 'image':instance.paddy_images.url,

@@ -1,0 +1,18 @@
+{% extends 'base_layout.html' %}
+
+{% block content%}
+<div class='title'>
+    <h1> Welcome to AINari Library!</h1>
+</div>
+
+<div class="information">
+        {% for d in disease_obj %}
+        <div>
+            <a href="{% url 'information:information_detail' d.id %}"><img src='{{ d.risk_disease_image.url }}' style="width:200px;height:200px;" /></a>
+            <h2><a href="{% url 'information:information_detail' d.id %}">{{ d.display_name }}</a></h2>
+            <p>{{ d.description }}</p>
+        </div>
+        {% endfor %}
+</div>
+
+{% endblock %}

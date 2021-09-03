@@ -24,7 +24,10 @@ class PaddyAreaInfo(models.Model): #child
     temperature = models.FloatField()
     water_level = models.FloatField()
     soil_nitrogen = models.FloatField(default= 0)
-    paddy_images = models.ImageField(default='default.png', blank=True)
+    soil_phosphorous = models.FloatField(default=0)
+    soil_potassium = models.FloatField(default=0)
+    soil_pH = models.FloatField(default=0)
+    paddy_images = models.ImageField(default='default.png', blank=True, upload_to='info_images')
 
     #many-to-many
     risk_disease = models.ManyToManyField(RiskDisease, through='PaddyAreaRiskDisease')
@@ -43,11 +46,14 @@ class PaddyAreaRiskDisease(models.Model): #PAI_D_Intermediate
     def get_info_id(self):
         return self.paddy_area_info.id
 
-    def get_disease_name(self):
+    def get_disease_name_raw(self):
         return self.risk_disease.name
+
+    def get_disease_name(self):
+        return ' '.join([i.capitalize() for i in self.risk_disease.name.split('_')])    
 
     def get_confidence(self):
         return self.confidence
 
 class TestImage(models.Model):
-    paddy_images = models.ImageField(default='default.png', blank=True)
+    paddy_images = models.ImageField(default='default.png', blank=True, upload_to='test_images')

@@ -19,8 +19,8 @@ from . import views
 app_name = 'information'
 
 urlpatterns = [
-    path('', views.homepage),
-    # path('paddy_area_detail/<str:paddy_area_name>/', views.paddy_area_detail, name='paddy_area_detail'),
+    path('', views.information, name='information'),
+    path('detail/<int:id>/', views.information_detail, name='information_detail'),
     # path('ajax/take_action/', views.take_action, name='take_action'),
     # path('test/', views.test, name='test')
 ]

@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', dashboard_views.homepage, name='homepage'),
     path('dashboard/', include('dashboard.urls')),
+    path('information/', include('information.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

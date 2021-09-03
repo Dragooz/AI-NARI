@@ -3,7 +3,9 @@
 
 {% block content%}
 
-<h1> Create Paddy Area Information </h1>
+<div class='title'>
+    <h1> Test the paddy images here! </h1>
+</div>
 
 <form class='site-form' action="{% url 'dashboard:test_image' %}" method="post" enctype='multipart/form-data'>
     {% csrf_token %}
@@ -17,16 +19,16 @@
     {% if info %}
         <div class="row mb-2 justify-content-center">
             <div class="col-6" style= 'display:flex;justify-content: right;'>
-                <img src='{{info.image}}' style="width:200px;height:200px;" />
+                <img src='{{info.image}}' class="image-border" style="width:200px;height:200px;" />
             </div>
             <div class="col-6">
                 {% for disease, prob in info.diseases_probability %}
-                    <div class="row mb-4">{{disease}} - {{prob}}</div>
+                    <div class="row mb-3">
+                        <p>{{disease}} - {{prob}}</p>
+                    </div>
                 {% endfor %}
             </div>
         </div>
-        
-
     {% endif %}
 
     <div>
@@ -48,7 +50,7 @@
     <!-- {{ form|crispy }} -->
 
     <div class='row justify-content-center' style='margin-bottom:20px;'>
-        <button type='submit' class='col-6 btn-primary'>Submit</button>
+        <button type='submit' class='col-6 submit-button'>Submit</button>
     </div>
 </form>
 
