@@ -4,33 +4,26 @@
 {% block content%}
 
 <div class='title'>
-    <h1> Create Paddy Area Information </h1>
+    <h1> Test the information here! </h1>
 </div>
 
-<form class='site-form' action="{% url 'dashboard:create_info' %}" method="post" enctype='multipart/form-data'>
+<form class='site-form' action="{% url 'dashboard:test_info' %}" method="post" enctype='multipart/form-data'>
     {% csrf_token %}
-
     <div class="row mb-2 justify-content-center">
-        <div class="col-6">
-            {{ form.paddy_area|as_crispy_field }}
-        </div>
-    </div>
-
-    <div class="row mb-2 justify-content-center">
-        <div class="col-6">
-            {{ form.paddy_height|as_crispy_field }}
-        </div>
         <div class="col-6">
             {{ form.humidity|as_crispy_field }}
+        </div>
+        <div class="col-6">
+            {{ form.temperature|as_crispy_field }}
         </div>
     </div>
     
     <div class="row mb-2 justify-content-center">
         <div class="col-6">
-            {{ form.temperature|as_crispy_field }}
+            {{ form.water_level|as_crispy_field }}
         </div>
         <div class="col-6">
-            {{ form.water_level|as_crispy_field }}
+            {{ form.rain_fall|as_crispy_field }}
         </div>
     </div>
 
@@ -52,15 +45,16 @@
         </div>
     </div>
 
-    <div class="row mb-2 justify-content-center">
-        <div class="col-6">
-            {{ form.rain_fall|as_crispy_field }}
+    {% if info %}
+        <div class="row mb-2 justify-content-center">
+            <div class="col-6" style='text-align:center;'>
+                {% for d in info.risk_predictions %}
+                    <h3>Prediction: {{d}}</h3>
+                {% endfor %}
+            </div>
         </div>
-        <div class="col-6">
-            {{ form.paddy_images|as_crispy_field }}
-        </div>
-    </div>
-    
+    {% endif %}
+
     <div>
         {% if form.errors %}
             {% for field in form %}

@@ -1,7 +1,10 @@
 ID,Name,Description,Image
 1,Close Plant Spacing,Use narrower plant spacing that results in greater leaf densities that can tolerate higher hispa numbers.,./dummy_data/image/close_plant_spacing.jpg
-2,Weed Removal During Crop-Free Season,Remove all weeds from the rice field during the crop-free season to eliminate rice hispa from the field,./dummy_data/image/weed_removal_crop_free.jpg
-3,Adjust Planting Time,"Adjust the plating time to prevent rainy season. If possible, start sowing after the onset of rainy season.",./dummy_data/image/adjust_planting_time.jpg
+2,Weed Removal During Crop-Free Season,Remove all weeds from the rice field during the crop-free season to eliminate rice hispa from the field.,./dummy_data/image/weed_removal_crop_free.jpg
+3,Adjust Planting Time - Leaf Blast,"Adjust the planting time to prevent rainy season. If possible, start sowing after the onset of rainy season.",./dummy_data/image/adjust_planting_time.jpg
 4,Dry Seed Treatment ,Dry seed treatment with Pseudomonas fluoroscens talc formulation at 10g/kg of seed can reduce blast disease,./dummy_data/image/dry_seed2.jpg
 5,Water Seeding,"Water seeding is recommended to reduce or eliminate blast disease transmission from seed to seedlings. In this system, rice is flown into a shallow flood and allowed to germinate. The water is then drained to allow for the rice to peg into the soil. After draining, rice is managed similarly to drill-seeded, delayed-flood rice. This method requires at least 30% more seed per acre as compared to the more efficient drill seeding system.  Higher seeding rates are used when unfavorable planting conditions exist. The increased seeding rate is used to overcome reduced germination and seedling survival.",./dummy_data/image/water_seedling.jpg
 6,Soak Seeds Before Planting,Soaking Seeds in hot water 10 to 12 minutes or in cold water for eight hours overnight can limit the fungal disease which may leads to planting fungal infected seeds,./dummy_data/image/soak_seed2.jpg
+7,Adjust Planting Time - Flood,Analyze the area that often floods and adjust the planting time to fit with the water fluctuations in the area.,./dummy_data/image/adjust_planting_time_flood.jpg
+8,Adjust Planting Time - Drought,Analyze and identify periods of probable moisture stress and avoid these periods especially during flowering stage.,./dummy_data/image/adjust_planting_time_drought.jpg
+9,Reduce Plant Desities,Lower plant density decreases intraspecific competition and improves water availability for a single plant.,./dummy_data/image/reduce_density.jpg

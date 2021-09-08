@@ -7,3 +7,5 @@ ID,Name,Description,Image
 6,Apply Pesticide,Spraying of methyl parathion 0.05% or Quinalphos 0.05%.,./dummy_data/image/pesticide.jpg
 7,Close Field Water Drainage System and Activate Water Pump  ,Continuous flooding can limit blast development. Field water drainage encourage nitrate formation and may lead to drought stress.,./dummy_data/image/water_drainage_system.jpg
 8,Apply Herbicide,"Monitor the field to check the existence of unwated weeds and grasses. If true, apply herbicide to kill unwanted weeds and grass in the field and nearby areas to remove alternate hosts that allow the fungus to survive and infect the rice crops.",./dummy_data/image/herbicide.jpg
+9,Ensure Waterways are Clear,Clear waterways are important to ensure water drainage is quick to prevent accumulation of too much water which leads to flooding. Flooding dammage the most during flowering stage of rice. This is due to fertiliztation would not occur resulting in total grain yield loss.,./dummy_data/image/ensure_waterways_are_clear.jpg
+10,Water Irrigation,Water management system which supply water to the field reduces yield pealnaty caused by drought.,./dummy_data/image/water_irrigation.jpg

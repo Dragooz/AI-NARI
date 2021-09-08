@@ -2,8 +2,41 @@
 
 {% block map %}
     <div class="row justify-content-center">
-        <div class="col-8 map-border mb-2 mt-2 pt-2 pb-2">
+        <div class="col-6 map-border mb-2 mt-2 pt-2 pb-2">
             {{map|safe}}
+        </div>
+        <div class="paddy-info table table-striped table-dark col-4 mb-2 mt-2 pt-2 pb-2" style='width:33% !important'>
+            <table>
+                
+                <tr>
+                    <td>Humidity:</td>
+                    <td>{{lastest_info.humidity}} g/kg</td>
+                </tr>
+                <tr>
+                    <td>Temperature:</td>
+                    <td>{{lastest_info.temperature}} celcius</td>
+                </tr>
+                <tr>
+                    <td>Water Level:</td>
+                    <td>{{lastest_info.water_level}} m</td>
+                </tr>
+                <tr>
+                    <td>Soil Nitrogen:</td>
+                    <td>{{lastest_info.soil_nitrogen}} mg/kg</td>
+                </tr>
+                <tr>
+                    <td>Soil Phosphorus:</td>
+                    <td>{{lastest_info.soil_phosphorus}} mg/kg</td>
+                </tr>
+                <tr>
+                    <td>Soil Potassium:</td>
+                    <td>{{lastest_info.soil_potassium}} mg/kg</td>
+                </tr>
+                <tr>
+                    <td>Soil pH:</td>
+                    <td>{{lastest_info.soil_pH}}</td>
+                </tr>
+            </table>
         </div>
     </div>
 {% endblock %}
@@ -103,13 +136,16 @@
             {% endif %}
             
             <td>
-                {% for d in pd_risk_disease %}
-                    {% if d.get_info_id == i.id %}
-                        <li>
-                            <p>{{d.action_taken}}</p>
-                        </li>
-                    {% endif%}
-                {% endfor %}
+                <ul>
+                    {% for d in pd_risk_disease %}
+                        {% if d.get_info_id == i.id %}
+                            <li>
+                                <p>{{d.action_taken}}</p>
+                            </li>
+                        {% endif%}
+                    {% endfor %}
+                </ul>
+
             </td>
         </tr>
     {% endfor %}

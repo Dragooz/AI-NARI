@@ -32,31 +32,31 @@ def getAuth():
 def getBaseMap():
     # Add custom basemaps to folium
     basemaps = {
-        'Google Maps': folium.TileLayer(
+        'Maps': folium.TileLayer(
             tiles='https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
             attr='Google',
-            name='Google Maps',
+            name='Maps',
             overlay=True,
             control=True
         ),
-        'Google Satellite': folium.TileLayer(
+        'Satellite': folium.TileLayer(
             tiles='https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
             attr='Google',
-            name='Google Satellite',
+            name='Satellite',
             overlay=True,
             control=True
         ),
-        'Google Terrain': folium.TileLayer(
+        'Terrain': folium.TileLayer(
             tiles='https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
             attr='Google',
-            name='Google Terrain',
+            name='Terrain',
             overlay=True,
             control=True
         ),
-        'Google Satellite Hybrid': folium.TileLayer(
+        'Satellite Hybrid': folium.TileLayer(
             tiles='https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
             attr='Google',
-            name='Google Satellite',
+            name='Satellite',
             overlay=True,
             control=True
         ),
@@ -201,16 +201,6 @@ def addCustomPolygon():
 
 
 def getMap(paddy_area_info=None, colour=None, ee=False):
-    if ee:
-        # Authenticate to use google earth
-        getPrivateKey()
-
-        # Get the google earth base maps
-        basemaps = getBaseMap()
-
-        # Add EE drawing method to folium.
-        folium.Map.add_ee_layer = add_ee_layer
-
     # Create a folium map object.
     # guoxuan_location = [6.130130, 102.197939]
     if paddy_area_info != None:
@@ -221,8 +211,17 @@ def getMap(paddy_area_info=None, colour=None, ee=False):
         my_map = folium.Map(location=[2.226888, 102.166600], zoom_start=20)
 
     if ee:
-        basemaps['Google Maps'].add_to(my_map)
-        basemaps['Google Satellite Hybrid'].add_to(my_map)
+        # Authenticate to use google earth
+        getPrivateKey()
+
+        # Get the google earth base maps
+        basemaps = getBaseMap()
+
+        # Add EE drawing method to folium.
+        folium.Map.add_ee_layer = add_ee_layer
+
+        basemaps['Maps'].add_to(my_map)
+        basemaps['Satellite Hybrid'].add_to(my_map)
  
     # no pre-defined markers - Default
     if paddy_area_info == None:
@@ -243,6 +242,7 @@ def getMap(paddy_area_info=None, colour=None, ee=False):
         for i, c in zip(paddy_area_info, colour):
             
             my_image_path = utils.get_image_directory(i.paddy_images.url)
+            
             encoded = base64.b64encode(open(my_image_path, 'rb').read())
             html = '<img src="data:image/png;base64,{}" width="200" height="200">'.format
             iframe = IFrame(html(encoded.decode('UTF-8')), width=220, height=220)

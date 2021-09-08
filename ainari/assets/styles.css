@@ -20,6 +20,10 @@ h1{
     padding-bottom: 10px;
 }
 
+h4{
+    color: #66FCF1;
+}
+
 p{
     color:aliceblue;
 }
@@ -173,4 +177,15 @@ ul.show > li > a{
 
 .disabled{
     opacity:20% !important;
+}
+
+.paddy-info{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.paddy-info > table{
+    color:#66FCF1;
+    font-size: 25px;
 }

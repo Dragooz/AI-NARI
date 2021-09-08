@@ -24,5 +24,6 @@ urlpatterns = [
     path('ajax/take_action/', views.take_action, name='take_action'),
     path('create_info', views.create_info, name='create_info'),
     path('test_image', views.test_image, name='test_image'),
+    path('test_info', views.test_info, name='test_info'),
     # path('test/', views.test, name='test')
 ]

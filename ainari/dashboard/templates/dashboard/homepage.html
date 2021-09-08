@@ -48,22 +48,29 @@
                 <ul>
                     {% for d in pd_risk_disease %}
                         {% if d.get_info_id == i.id %}
-                        
                             <li>
-                                <p>{{d.get_disease_name}} - {{d.get_confidence}} - {{d.happened}}  </p>
+                                <p>{{d.get_disease_name}} - 
+                                    {% if d.happened %}
+                                    Happened
+                                    {% else %}
+                                    Not Happen
+                                    {% endif %}
+                                </p>
                             </li>
                         {% endif%}
                     {% endfor %}
                 </ul>
             </td>
             <td>
-                {% for d in pd_risk_disease %}
-                    {% if d.get_info_id == i.id %}
-                        <li>
-                            <p>{{d.action_taken}}</p>
-                        </li>
-                    {% endif%}
-                {% endfor %}
+                <ul>
+                    {% for d in pd_risk_disease %}
+                        {% if d.get_info_id == i.id %}
+                            <li>
+                                <p>{{d.action_taken}}</p>
+                            </li>
+                        {% endif%}
+                    {% endfor %}
+                </ul>
             </td>
 
         </tr>

@@ -47,7 +47,7 @@ def use_modelv2(img_path):
 
     body = str.encode(json.dumps(data))
 
-    url = 'http://23.99.111.74:80/api/v1/service/ainari-v1/score'
+    url = 'http://52.175.20.82:80/api/v1/service/ainari/score'
     api_key = settings.API_KEY # Replace this with the API key for the web service
     headers = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_key)}
 
@@ -63,6 +63,74 @@ def use_modelv2(img_path):
         # Print the headers - they include the requert ID and the timestamp, which are useful for debugging the failure
         print(error.info())
         return json.loads(error.read().decode("utf8", 'ignore'))
+
+def predict_model_v2(predictions):
+    diseases = []
+    probability = []
+
+    for dict_ in predictions:
+        for k, v in dict_.items():
+            '''
+            Scored Probabilities_brown_spot
+            0.005899534560739994
+            Scored Probabilities_healthy
+            0.5360434055328369
+            Scored Probabilities_hispa
+            0.2814338803291321
+            Scored Probabilities_leaf_blast
+            0.17662310600280762
+            '''
+            if 'Scored Prob' in k:
+                diseases.append(k.split('_', 1)[-1].lower().strip().replace(' ', '_'))
+                probability.append(round(v, 4))
+
+    return diseases, probability
+
+def model_predict_risk(info):
+
+    def allowSelfSignedHttps(allowed):
+        # bypass the server certificate verification on client side
+        if allowed and not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None):
+            ssl._create_default_https_context = ssl._create_unverified_context
+
+    allowSelfSignedHttps(True) # this line is needed if you use self-signed certificate in your scoring service.
+
+    # Request data goes here
+    data = {
+    "data":
+    [
+        {
+            'Temperature': info.temperature,
+            'Humidity': info.humidity,
+            'Water Level': info.water_level,
+            'Nitrogen': info.soil_nitrogen,
+            'Phosphorus': info.soil_phosphorus,
+            'Potasium': info.soil_potassium,
+            'pH': info.soil_pH,
+            'Rainfall': info.rain_fall,
+        },
+    ],
+}
+
+    body = str.encode(json.dumps(data))
+
+    url = 'http://f9f97280-c48c-4167-b706-774c94b355f0.southeastasia.azurecontainer.io/score'
+    api_key = settings.API_KEY # Replace this with the API key for the web service
+    headers = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_key)}
+
+    req = urllib.request.Request(url, body, headers)
+
+    try:
+        response = urllib.request.urlopen(req)
+        content = json.loads(response.read())
+        return json.loads(content)['result']
+
+    except urllib.error.HTTPError as error:
+        print("The request failed with status code: " + str(error.code))
+        # Print the headers - they include the requert ID and the timestamp, which are useful for debugging the failure
+        print(error.info())
+        return json.loads(error.read().decode("utf8", 'ignore'))
+
 
 def get_image_directory(image_instance_path):
     a= str(settings.BASE_DIR).split('\\')

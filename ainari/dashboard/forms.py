@@ -15,7 +15,11 @@ class CreatePaddyAreaInfo(forms.ModelForm):
             'humidity': ('Humidity (g/kg)'),
             'temperature': ('Temperature (Celcius)'),
             'water_level': ('Water Level (m)'),
-            'soil_nitrogen': ('Soil Nitrogen (mg/kg)')
+            'soil_nitrogen': ('Soil Nitrogen (mg/kg)'),
+            'soil_phosphorous': ('Soil Phosphorous (mg/kg)'),
+            'soil_potassium': ('Soil Potassium (mg/kg)'),
+            'soil_pH': ('Soil pH'),
+            'rain_fall': ('Rain Fall (mm)'),
         }
         # help_texts = {
         #     'paddy_height': ('1'),
@@ -31,3 +35,19 @@ class TestImage(forms.ModelForm):
     class Meta:
         model = models.TestImage
         fields = ['paddy_images',]
+
+class TestInfo(forms.ModelForm):
+    class Meta:
+        model = models.TestInfo
+        fields = '__all__'
+
+        labels = {
+            'humidity': ('Humidity (g/kg)'),
+            'temperature': ('Temperature (Celcius)'),
+            'water_level': ('Water Level (m)'),
+            'soil_nitrogen': ('Soil Nitrogen (mg/kg)'),
+            'soil_phosphorous': ('Soil Phosphorous (mg/kg)'),
+            'soil_potassium': ('Soil Potassium (mg/kg)'),
+            'soil_pH': ('Soil pH'),
+            'rain_fall': ('Rain Fall (mm)'),
+        }

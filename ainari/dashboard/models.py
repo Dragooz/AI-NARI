@@ -24,7 +24,7 @@ class PaddyAreaInfo(models.Model): #child
     temperature = models.FloatField()
     water_level = models.FloatField()
     soil_nitrogen = models.FloatField(default= 0)
-    soil_phosphorous = models.FloatField(default=0)
+    soil_phosphorus = models.FloatField(default=0)
     soil_potassium = models.FloatField(default=0)
     soil_pH = models.FloatField(default=0)
     rain_fall = models.FloatField(default=0)
@@ -58,3 +58,13 @@ class PaddyAreaRiskDisease(models.Model): #PAI_D_Intermediate
 
 class TestImage(models.Model):
     paddy_images = models.ImageField(default='default.png', blank=True, upload_to='test_images')
+
+class TestInfo(models.Model):
+    humidity = models.FloatField()
+    temperature = models.FloatField()
+    water_level = models.FloatField()
+    soil_nitrogen = models.FloatField(default= 0)
+    soil_phosphorus = models.FloatField(default=0)
+    soil_potassium = models.FloatField(default=0)
+    soil_pH = models.FloatField(default=0)
+    rain_fall = models.FloatField(default=0)

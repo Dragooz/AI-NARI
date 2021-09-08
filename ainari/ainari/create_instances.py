@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.files import File
 
 # Full path to the directory immediately above your django project directory
-your_djangoproject_home= settings.AINARI_PROJECT_PATH
+your_djangoproject_home= r'D:\YiChongFiles\UmHackathon - Laplace\Django Stuff\AINARI_PROJECT\ainari'
 sys.path.append(your_djangoproject_home)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ainari.settings')
 django.setup()
@@ -112,9 +112,9 @@ def createRecommendation():
         for _, row_rel in riskrecommendationrel_df.loc[riskrecommendationrel_df['Recommendation_ID']==idx+1].iterrows():
             information_riskrecommendation.risk_disease.add(RiskDisease.objects.get(pk=row_rel[1]))
     
-# createRisk()
-# createPaddyDetails()
-# createPaddyInfo()
-# createSolution()
-# createRecommendation()
+createRisk()
+createPaddyDetails()
+createPaddyInfo()
+createSolution()
+createRecommendation()
 
