@@ -18,15 +18,22 @@
 
     {% if info %}
         <div class="row mb-2 justify-content-center">
-            <div class="col-6" style= 'display:flex;justify-content: right;'>
+            <div class="col-2">
                 <img src='{{info.image}}' class="image-border" style="width:200px;height:200px;" />
             </div>
-            <div class="col-6">
+            <div class="col-2">
+                <h3>ResNet Prediction</h3>
                 {% for disease, prob in info.diseases_probability %}
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <p>{{disease}} - {{prob}}%</p>
                     </div>
                 {% endfor %}
+            </div>
+            <div class="col-2">
+                <h3>Custom Vision Prediction</h3>
+                <div class="row mb-1">
+                    <p>{{info.custom_vision_diseases}} - {{info.custom_vision_probability}}%</p>
+                </div>
             </div>
         </div>
     {% endif %}

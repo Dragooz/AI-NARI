@@ -9,15 +9,15 @@ import base64
 
 from django.conf import settings
 
-def use_model(img_path):
-    url="https://visionpaddy-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/8a7f3e83-d2ed-4b14-9d03-e6f32addcd74/classify/iterations/paddy%20disease/image"
-    headers={'content-type':'application/octet-stream','Prediction-Key': settings.PREDICTION_KEY}
+def custom_vision_model(img_path):
+    url="https://ainaricustomvision-prediction.cognitiveservices.azure.com/customvision/v3.0/Prediction/7c329cd7-a59f-4a89-a1e9-5e0b551fda32/detect/iterations/ainari-objectDetection/image"
+    headers={'content-type':'application/octet-stream','Prediction-Key': settings.CUSTOM_VISION_OBJ_DETECTION_KEY}
     r =requests.post(url,data=open(img_path,"rb"),headers=headers)
     content = json.loads(r.content.decode('utf-8'))
+    # print(content)
+    return content['predictions'][0]
 
-    return content['predictions']
-
-def use_modelv2(img_path):
+def resnet_model(img_path):
 
     with open(img_path, "rb") as img_file:
         b64_string = base64.b64encode(img_file.read()).decode('utf-8')
@@ -37,7 +37,6 @@ def use_modelv2(img_path):
                 {
                     'image': "data:image/png;base64,"+ b64_string,
                     'id': "0",
-                    'category': "BrownSpot",
                 },
             ],
         },
@@ -47,8 +46,8 @@ def use_modelv2(img_path):
 
     body = str.encode(json.dumps(data))
 
-    url = 'http://52.175.20.82:80/api/v1/service/ainari/score'
-    api_key = settings.API_KEY # Replace this with the API key for the web service
+    url = 'http://52.175.16.149:80/api/v1/service/ainari-resnet/score'
+    api_key = settings.RESNET_API_KEY # Replace this with the API key for the web service
     headers = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_key)}
 
     req = urllib.request.Request(url, body, headers)
@@ -64,7 +63,7 @@ def use_modelv2(img_path):
         print(error.info())
         return json.loads(error.read().decode("utf8", 'ignore'))
 
-def predict_model_v2(predictions):
+def get_disease_prob(predictions):
     diseases = []
     probability = []
 
@@ -86,6 +85,12 @@ def predict_model_v2(predictions):
 
     return diseases, probability
 
+def get_disease_prob_custom_vision(predictions):
+    if predictions['probability'] >= 0.5:
+        return predictions['tagName'], round(predictions['probability'],4)
+    else:
+        return 'healthy', '1.0'
+
 def model_predict_risk(info):
 
     def allowSelfSignedHttps(allowed):
@@ -97,25 +102,30 @@ def model_predict_risk(info):
 
     # Request data goes here
     data = {
-    "data":
-    [
-        {
-            'Temperature': info.temperature,
-            'Humidity': info.humidity,
-            'Water Level': info.water_level,
-            'Nitrogen': info.soil_nitrogen,
-            'Phosphorus': info.soil_phosphorus,
-            'Potasium': info.soil_potassium,
-            'pH': info.soil_pH,
-            'Rainfall': info.rain_fall,
-        },
-    ],
+    "Inputs": {
+        "WebServiceInput0":
+        [
+            {
+                'Risk': "Brown Spot",
+                'Temperature': info.temperature,
+                'Humidity': info.humidity,
+                'Water Level': info.water_level,
+                'Nitrogen': info.soil_nitrogen,
+                'Phosphorus': info.soil_phosphorus,
+                'Potasium': info.soil_potassium,
+                'pH': info.soil_pH,
+                'Rainfall': info.rain_fall,
+            },
+        ],
+    },
+    "GlobalParameters": {
+    }
 }
 
     body = str.encode(json.dumps(data))
 
-    url = 'http://f9f97280-c48c-4167-b706-774c94b355f0.southeastasia.azurecontainer.io/score'
-    api_key = settings.API_KEY # Replace this with the API key for the web service
+    url = 'http://52.175.16.149:80/api/v1/service/riskpredictor/score'
+    api_key = settings.RISK_PREDICTOR_API_KEY # Replace this with the API key for the web service
     headers = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_key)}
 
     req = urllib.request.Request(url, body, headers)
@@ -123,7 +133,8 @@ def model_predict_risk(info):
     try:
         response = urllib.request.urlopen(req)
         content = json.loads(response.read())
-        return json.loads(content)['result']
+        print(content)
+        return content['Results']['WebServiceOutput0']
 
     except urllib.error.HTTPError as error:
         print("The request failed with status code: " + str(error.code))

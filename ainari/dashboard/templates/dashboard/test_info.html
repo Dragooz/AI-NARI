@@ -47,9 +47,15 @@
 
     {% if info %}
         <div class="row mb-2 justify-content-center">
-            <div class="col-6" style='text-align:center;'>
-                {% for d in info.risk_predictions %}
-                    <h3>Prediction: {{d}}</h3>
+            <div class="col-6" style='text-align:center; margin:auto;'>
+                <h3>Predictions:</h3>
+            </div>
+
+            <div class="col-6">
+                {% for disease, prob in info.risk_diseases_probability %}
+                    <div class="row mb-2">
+                        <p>{{disease}} - {{prob}}%</p>
+                    </div>
                 {% endfor %}
             </div>
         </div>

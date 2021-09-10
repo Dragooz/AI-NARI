@@ -172,35 +172,30 @@ def create_info(request):
             print('predicting...')
 
             # predicting using images
-            predictions = utils.use_modelv2(my_image_path)
+            predictions = utils.resnet_model(my_image_path)
 
             #predicting using informations
             risk_predictions = utils.model_predict_risk(instance)
-            #return ['Brown Spot']
 
             #modelv2
-            diseases, probability = utils.predict_model_v2(predictions)
-
-            predicted_risk = []
-            #predicting risk
-            for i in risk_predictions:
-                if i!= 'Healthy':
-                    predicted_risk.append(i.lower().strip().replace(' ', '_'))
+            diseases, probability = utils.get_disease_prob(predictions)
+            risk_diseases, risk_probability = utils.get_disease_prob(risk_predictions)
 
             print('prediction done!')
 
             #add relationship
 
-            #modelv2
+            #modelv2 using images
             for i in range(len(diseases)):
                 if probability[i] >= 0.5 and diseases[i] != 'healthy':
                     instance.risk_disease.add(RiskDisease.objects.get(name=diseases[i]), 
                                               through_defaults={'confidence':probability[i], 'happened':True})
 
-            #risk
-            for i in predicted_risk:
-                instance.risk_disease.add(RiskDisease.objects.get(name=i), 
-                                            through_defaults={'confidence':1, 'happened':False})
+            #risk using informations
+            for i in range(len(risk_diseases)):
+                if risk_probability[i] >= 0.5 and risk_diseases[i] != 'healthy':
+                    instance.risk_disease.add(RiskDisease.objects.get(name=risk_diseases[i]), 
+                                              through_defaults={'confidence':risk_probability[i], 'happened':False})
 
             #save
             instance.save()
@@ -224,16 +219,23 @@ def test_image(request):
             my_image_path = utils.get_image_directory(instance.paddy_images.url)
 
             print('predicting...')
-            # predictions = utils.use_model(my_image_path)
-            predictions = utils.use_modelv2(my_image_path)
-            diseases, probability = utils.predict_model_v2(predictions)
+
+            #using kaggle model
+            predictions = utils.resnet_model(my_image_path)
+            diseases, probability = utils.get_disease_prob(predictions)
             probability = [i*100 for i in probability]
 
+            #using custom vision
+            test_pred = utils.custom_vision_model(my_image_path)
+            test_diseases, test_probability = utils.get_disease_prob_custom_vision(test_pred)
+            test_probability = test_probability * 100
             print('prediction done!')
 
             info = {
                 'image':instance.paddy_images.url,
-                'diseases_probability': zip(diseases,probability),
+                'diseases_probability': zip(diseases, probability),
+                'custom_vision_diseases': test_diseases, 
+                'custom_vision_probability':test_probability,
             }
 
             return render(request, 'dashboard/test_image.html', {'form': form, 'info': info})
@@ -251,10 +253,12 @@ def test_info(request):
 
             print('predicting...')
             risk_predictions = utils.model_predict_risk(instance)
+            risk_diseases, risk_probability = utils.get_disease_prob(risk_predictions)
+            risk_probability = [i*100 for i in risk_probability]
             print('prediction done!')
 
             info = {
-                'risk_predictions': risk_predictions,
+                'risk_diseases_probability': zip(risk_diseases,risk_probability),
             }
 
             return render(request, 'dashboard/test_info.html', {'form': form, 'info': info})
